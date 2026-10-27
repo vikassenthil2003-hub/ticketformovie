@@ -18,42 +18,10 @@ const HOST = process.env.HOST || '0.0.0.0';
 // Create HTTP server
 const server = http.createServer(app);
 
-// Socket.IO CORS configuration - Restrict to trusted frontend origins
-const configuredOrigins = (process.env.CLIENT_URL || '')
-  .split(',')
-  .map((o) => o.trim().replace(/\/+$/, ''))
-  .filter(Boolean);
-
-const allowedOrigins = Array.from(
-  new Set([
-    ...configuredOrigins,
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost:4173',
-    'http://127.0.0.1:4173',
-  ])
-);
-
 // Initialize Socket.IO with CORS and robust ping/pong intervals
 const io = new Server(server, {
   cors: {
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      const cleanOrigin = origin.replace(/\/+$/, '');
-      const isWildcard = configuredOrigins.includes('*');
-      const isConfigured = allowedOrigins.includes(cleanOrigin);
-      const isLocalDev =
-        cleanOrigin.startsWith('http://localhost:') ||
-        cleanOrigin.startsWith('http://127.0.0.1:');
-      const isVercelDomain = cleanOrigin.endsWith('.vercel.app');
-
-      if (isWildcard || isConfigured || isLocalDev || isVercelDomain) {
-        return callback(null, true);
-      }
-      return callback(null, false);
-    },
+    origin: true,
     methods: ['GET', 'POST'],
     credentials: true,
   },

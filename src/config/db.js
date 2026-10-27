@@ -1,5 +1,18 @@
+const dns = require('dns');
 const mongoose = require('mongoose');
 const { ensureAllDemoAccounts } = require('../utils/bootstrapAdmin');
+
+// Ensure reliable DNS servers (Google 8.8.8.8, Cloudflare 1.1.1.1) to resolve MongoDB Atlas SRV records.
+// This resolves the common "querySrv EBADRESP" issue on Windows / ISP routers where SRV queries fail.
+const configureReliableDns = () => {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4', '1.0.0.1']);
+  } catch (err) {
+    // Ignore if environment restricts setting DNS servers
+  }
+};
+
+configureReliableDns();
 
 // Set up connection event listeners once
 let listenersRegistered = false;

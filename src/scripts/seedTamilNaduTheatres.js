@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
+const connectDB = require('../config/db');
 const Theatre = require('../models/Theatre');
 const Screen = require('../models/Screen');
 const Show = require('../models/Show');
@@ -18,9 +19,7 @@ const theatreImportService = require('../services/theatreImportService');
 
 async function seed() {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cineverse_ai';
-    console.log('[Seed] Connecting to MongoDB at', mongoUri);
-    await mongoose.connect(mongoUri);
+    await connectDB();
     console.log('[Seed] Connected successfully.');
 
     // 1. Backfill existing demo theatres

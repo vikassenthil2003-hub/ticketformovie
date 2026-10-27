@@ -473,11 +473,10 @@ const ensureShowsForCurrentDate = async () => {
 
 // If run directly from CLI
 if (require.main === module) {
-  const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cineverse_ai';
-  mongoose
-    .connect(mongoUri)
+  const connectDB = require('../config/db');
+  connectDB()
     .then(async () => {
-      console.log('Connected to MongoDB at:', mongoUri);
+      console.log('Connected to MongoDB successfully.');
       await seedDynamicShows();
       process.exit(0);
     })

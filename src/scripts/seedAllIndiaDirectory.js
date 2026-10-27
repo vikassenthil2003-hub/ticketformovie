@@ -9,15 +9,14 @@ const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
+const connectDB = require('../config/db');
 const Theatre = require('../models/Theatre');
 const theatreImportService = require('../services/theatreImportService');
 const { seedDynamicShows } = require('./seedDynamicShows');
 
 async function seedAllIndia() {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cineverse_ai';
-    console.log('🇮🇳 [All-India Seed] Connecting to MongoDB at', mongoUri);
-    await mongoose.connect(mongoUri);
+    await connectDB();
     console.log('🇮🇳 [All-India Seed] Connected successfully.');
 
     // 1. Import national verified multiplexes & premier theatres

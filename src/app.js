@@ -19,49 +19,15 @@ app.use(
   })
 );
 
-// CORS configuration - Strictly restrict to configured trusted frontend origins
-const configuredOrigins = (process.env.CLIENT_URL || '')
-  .split(',')
-  .map((o) => o.trim().replace(/\/+$/, ''))
-  .filter(Boolean);
-
-const defaultAllowedOrigins = [
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-  'http://localhost:4173',
-  'http://127.0.0.1:4173',
-];
-
-const allowedOrigins = Array.from(new Set([...configuredOrigins, ...defaultAllowedOrigins]));
-
+// CORS configuration - Allow requested origins with full credentials support
+// Uses origin: true to dynamically reflect the incoming origin (localhost:3000, localhost:5173, Vercel, etc.)
+// This guarantees full compatibility with credentials: true without wildcard '*' browser rejections,
+// and automatically reflects requested headers (Accept, Authorization, Content-Type, etc.)
 const corsOptions = {
-  origin: "*",
-  // origin: (origin, callback) => {
-  //   // Allow requests with no origin (e.g. mobile apps, curl, or server-to-server)
-  //   if (!origin) {
-  //     return callback(null, true);
-  //   }
-
-  //   const cleanOrigin = origin.replace(/\/+$/, '');
-  //   const isWildcard = configuredOrigins.includes('*');
-  //   const isConfigured = allowedOrigins.includes(cleanOrigin);
-  //   const isLocalDev =
-  //     cleanOrigin.startsWith('http://localhost:') ||+
-  //     cleanOrigin.startsWith('http://127.0.0.1:');
-  //   const isVercelDomain = cleanOrigin.endsWith('.vercel.app');
-
-  //   if (isWildcard || isConfigured || isLocalDev || isVercelDomain) {
-  //     return callback(null, true);
-  //   }
-
-  //   return callback(null, false);
-  // },
-  
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
