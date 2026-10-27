@@ -37,27 +37,28 @@ const defaultAllowedOrigins = [
 const allowedOrigins = Array.from(new Set([...configuredOrigins, ...defaultAllowedOrigins]));
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. mobile apps, curl, or server-to-server)
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    const cleanOrigin = origin.replace(/\/+$/, '');
-    const isWildcard = configuredOrigins.includes('*');
-    const isConfigured = allowedOrigins.includes(cleanOrigin);
-    const isLocalDev =
-      cleanOrigin.startsWith('http://localhost:') ||+
-      cleanOrigin.startsWith('http://127.0.0.1:');
-    const isVercelDomain = cleanOrigin.endsWith('.vercel.app');
-
-    if (isWildcard || isConfigured || isLocalDev || isVercelDomain) {
-      return callback(null, true);
-    }
-
-    return callback(null, false);
-  },
   origin: "*",
+  // origin: (origin, callback) => {
+  //   // Allow requests with no origin (e.g. mobile apps, curl, or server-to-server)
+  //   if (!origin) {
+  //     return callback(null, true);
+  //   }
+
+  //   const cleanOrigin = origin.replace(/\/+$/, '');
+  //   const isWildcard = configuredOrigins.includes('*');
+  //   const isConfigured = allowedOrigins.includes(cleanOrigin);
+  //   const isLocalDev =
+  //     cleanOrigin.startsWith('http://localhost:') ||+
+  //     cleanOrigin.startsWith('http://127.0.0.1:');
+  //   const isVercelDomain = cleanOrigin.endsWith('.vercel.app');
+
+  //   if (isWildcard || isConfigured || isLocalDev || isVercelDomain) {
+  //     return callback(null, true);
+  //   }
+
+  //   return callback(null, false);
+  // },
+  
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
