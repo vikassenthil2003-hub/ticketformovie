@@ -47,7 +47,7 @@ const corsOptions = {
     const isWildcard = configuredOrigins.includes('*');
     const isConfigured = allowedOrigins.includes(cleanOrigin);
     const isLocalDev =
-      cleanOrigin.startsWith('http://localhost:') ||
+      cleanOrigin.startsWith('http://localhost:') ||+
       cleanOrigin.startsWith('http://127.0.0.1:');
     const isVercelDomain = cleanOrigin.endsWith('.vercel.app');
 
@@ -57,6 +57,7 @@ const corsOptions = {
 
     return callback(null, false);
   },
+  origin: "*",
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
